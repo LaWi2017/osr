@@ -54,7 +54,8 @@ struct shortcut_storage final {
 
   static constexpr std::string get_filename(
       search_profile const profile) noexcept {
-    return (std::string(kFilenamePrefix) + std::string(to_str(profile)) + ".bin");
+    return (std::string(kFilenamePrefix) + std::string(to_str(profile)) +
+            ".bin");
   }
 
   static cista::wrapped<shortcut_storage const> read(
@@ -70,10 +71,13 @@ struct shortcut_storage final {
 
 template <typename Node>
 struct path_label final {
-  Node node_;
-  cost_t cost_;
-  way_idx_t way_;
+  Node node_ = Node::invalid();
+  cost_t cost_ = kInfeasible;
+  way_idx_t way_ = way_idx_t::invalid();
   bool operator==(path_label const&) const = default;
+  path_label() = default;
+  path_label(Node const n, cost_t const c, way_idx_t const w)
+      : node_{std::move(n)}, cost_{c}, way_{w} {}
 };
 
 template <typename Node>

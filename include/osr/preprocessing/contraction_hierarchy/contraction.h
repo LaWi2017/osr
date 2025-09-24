@@ -390,13 +390,13 @@ void preprocess_ch(std::filesystem::path const& directory,
   fmt::println(" finished");
 
   fmt::println("contracting nodes...");
-  auto constexpr kOffset = 4U;  // treat (kOffset*10) % as 0 %
+  auto constexpr kOffsetFactor = 4U;  // treat (kOffset*10) % as 0 %
   auto update_progress = [&](size_t const val) {
     pt->status(std::to_string(val) + "/" + std::to_string(num_nodes));
-    pt->update(
-        val > kOffset * num_nodes / 10 ? val - kOffset * num_nodes / 10 : 0);
+    auto const offset = kOffsetFactor * num_nodes / 10;
+    pt->update(val > offset ? val - offset : 0);
   };
-  pt->in_high((10 - kOffset) * num_nodes / 10);
+  pt->in_high((10 - kOffsetFactor) * num_nodes / 10);
   update_progress(0);
   auto timer = std::chrono::steady_clock::now();
   for (auto const [order, via_idx] :
