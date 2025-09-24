@@ -364,7 +364,7 @@ void preprocess_ch(std::filesystem::path const& directory,
   auto const& r = *w.r_;
 
   auto const num_nodes = w.n_nodes();
-  size_t num_edges = 0;
+  auto num_edges = way_idx_t::value_t{0};
   auto const num_restricted = r.node_is_restricted_.count();
   for (auto way : r.way_nodes_) {
     if (way.empty()) continue;
@@ -390,11 +390,11 @@ void preprocess_ch(std::filesystem::path const& directory,
   fmt::println(" finished");
 
   fmt::println("contracting nodes...");
-  auto constexpr kOffset = 4;  // treat (kOffset*10) % as 0 %
+  auto constexpr kOffset = 4U;  // treat (kOffset*10) % as 0 %
   auto update_progress = [&](size_t const val) {
     pt->status(std::to_string(val) + "/" + std::to_string(num_nodes));
     pt->update(
-        std::max(0L, static_cast<int64_t>(val) - kOffset * num_nodes / 10));
+        val > kOffset * num_nodes / 10 ? val - kOffset * num_nodes / 10 : 0);
   };
   pt->in_high((10 - kOffset) * num_nodes / 10);
   update_progress(0);
