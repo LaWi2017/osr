@@ -71,9 +71,9 @@ struct shortcut_storage final {
 
 template <typename Node>
 struct path_label final {
-  Node node_ = Node::invalid();
-  cost_t cost_ = kInfeasible;
-  way_idx_t way_ = way_idx_t::invalid();
+  Node node_;
+  cost_t cost_;
+  way_idx_t way_;
   bool operator==(path_label const&) const = default;
   path_label() = default;
   path_label(Node const n, cost_t const c, way_idx_t const w)
